@@ -42,14 +42,12 @@ ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 sudo echo 'LANG="en_US.UTF-8"' >> /etc/profile;source /etc/profile
 ```
-## 重启
+完成后重启，环境准备就绪
 
 # 安装Rancher
-## 版本
-2.0.8，单节点安装，无证书
+版本2.0.8，单节点安装，无证书
 
-## master节点
-带API审计，便于理解
+安装Server，带API审计
 ```
 docker run -d --restart=unless-stopped \
   -p 80:80 -p 443:443 \
@@ -63,7 +61,15 @@ docker run -d --restart=unless-stopped \
 ```
 浏览器访问`192.168.66.131` 
 ![](/images/rancher-init.png)
-点击添加集群
+
+点击添加集群，选择`CUSTOM`
+在master节点勾选etcd，Control，Worker
+在worker节点勾选Worker
+分别执行相关命令即可完成安装
+![](/images/init-rancher-cluster.png)
+![](/images/init-rancher-done.png)
+
+# 测试spring cloud微服务
 
 
 
