@@ -69,7 +69,17 @@ docker run -d --restart=unless-stopped \
 ![](/images/init-rancher-cluster.png)
 ![](/images/init-rancher-done.png)
 
-# 测试spring cloud微服务
+# 部署spring cloud 微服务
 
+## 点击部署服务
+![](/images/rancher-deploy.png)
 
+## 部署eureka
+![](/images/rancher-eureka.png)
 
+## 部署app
+![](/images/rancher-app-a.png)
+![](/images/rancher-app-b.png)
+![](/images/rancher-app.png)
+![](/images/rancher-eureka-ui.png)
+部署成功，查看日志确认服务调用成功
