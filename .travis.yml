@@ -23,7 +23,6 @@ env:
  global:
    - GH_REF: github.com/YoKv/YoKv.github.io.git
 notifications:
-  webhooks: https://oapi.dingtalk.com/robot/send?access_token=aee16a814aa2d5b289cf6453ba8ee2144b477e2fd5a759ceee777b826494d842
   slack:
     on_success: never
     on_failure: never
