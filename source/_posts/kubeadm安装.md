@@ -89,9 +89,13 @@ kubectl label node kube-2 node-role.kubernetes.io/worker=worker
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 
-kubectl proxy --address='0.0.0.0' --disable-filter=true
+不应使用kubectl proxy命令公开公开仪表板，因为它只允许HTTP连接。 对于localhost和127.0.0.1以外的域，将无法登录。
 
-http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+kubectl proxy --address='192.168.154.132' --accept-hosts="^*$"
+
+http://192.168.154.132:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+
 ```
 
 
@@ -113,3 +117,5 @@ vi /etc/fstab
 # 资源链接
 
 [官方文档](https://kubernetes.io/docs/setup/independent/install-kubeadm/)
+
+[dashboard登录](https://github.com/kubernetes/dashboard/wiki/Creating-sample-user)
