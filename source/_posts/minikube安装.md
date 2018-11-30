@@ -6,6 +6,9 @@ categories:
 ---
 
 # minikube 介绍
+
+<!--more-->
+
 minikube能够快速搭建本地k8s，依赖于`docker-machine`，默认使用VirtualBox创建节点，在win10下支持`hyperv`
 
 # 环境

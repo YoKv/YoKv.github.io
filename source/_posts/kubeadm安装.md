@@ -8,6 +8,8 @@ categories:
 # 环境
 * centos7
 
+<!--more-->
+
 # 安装指定版本docker-ce
 ```
 yum -y install net-tools wget

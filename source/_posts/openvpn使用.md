@@ -6,6 +6,9 @@ categories:
 ---
 
 # 安装
+
+<!--more-->
+
 ```
 yum install -y epel-release
 yum install -y openvpn
