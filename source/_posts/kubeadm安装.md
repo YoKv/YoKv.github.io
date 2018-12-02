@@ -85,18 +85,30 @@ kubectl label node kube-2 node-role.kubernetes.io/worker=worker
 ```
 
 # dashboard
-使用kube-proxy访问
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-
-不应使用kubectl proxy命令公开公开仪表板，因为它只允许HTTP连接。 对于localhost和127.0.0.1以外的域，将无法登录。
-
-kubectl proxy --address='192.168.154.132' --accept-hosts="^*$"
-
-http://192.168.154.132:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
-
-
 ```
+
+[dashboard登录token](https://github.com/kubernetes/dashboard/wiki/Creating-sample-user)
+使用kube-proxy访问
+```
+不应使用kubectl proxy命令公开公开仪表板，因为它只允许HTTP连接。 对于localhost和127.0.0.1以外的域，将无法登录。
+```
+```
+kubectl proxy
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+```
+
+外部通过`NodePort`访问，修改yml文件，修改对应services的type
+```
+mkdir certs
+openssl req -nodes -newkey rsa:2048 -keyout certs/dashboard.key -out certs/dashboard.csr -subj "/C=/ST=/L=/O=/OU=/CN=kubernetes-dashboard"
+openssl x509 -req -sha256 -days 365 -in certs/dashboard.csr -signkey certs/dashboard.key -out certs/dashboard.crt
+kubectl delete secret kubernetes-dashboard-certs -n kube-system
+kubectl create secret generic kubernetes-dashboard-certs --from-file=certs -n kube-system
+kubectl delete pods $(kubectl get pods -n kube-system|grep kubernetes-dashboard|awk '{print $1}') -n kube-system #re-install dashboard
+```
+
 
 
 # 注意点
@@ -117,5 +129,3 @@ vi /etc/fstab
 # 资源链接
 
 [官方文档](https://kubernetes.io/docs/setup/independent/install-kubeadm/)
-
-[dashboard登录](https://github.com/kubernetes/dashboard/wiki/Creating-sample-user)
