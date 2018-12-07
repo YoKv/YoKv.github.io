@@ -5,9 +5,12 @@ categories:
 - DevOps
 ---
 
-<!--more-->
+
 
 # 查找
+
+<!--more-->
+
 ``` 
 find  /usr/bin -name *.zip
 locate *.doc

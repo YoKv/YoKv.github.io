@@ -5,9 +5,12 @@ categories:
 - kubenetes
 ---
 
-<!--more-->
+
 
 # Taint 和 Toleration
+
+<!--more-->
+
 目的：pod分配到合适的节点
 
 # Kubernetes API 概述
