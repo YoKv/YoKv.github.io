@@ -28,7 +28,7 @@ Node Status:
 * PIDPressure
 * DiskPressure
 * NetworkUnavailable
- 
+
 ## Capacity
 资源的描述
 
@@ -37,9 +37,9 @@ Node Status:
 
 # Master Node
 管理权限的节点，主要通过apiserver获取其他节点信息：
-	> 通过kubelet获取节点的pods和pods状态，提供kubelet的端口转发功能。
-	> nodes, pods, and services通过http连接
-	
+​	> 通过kubelet获取节点的pods和pods状态，提供kubelet的端口转发功能。
+​	> nodes, pods, and services通过http连接
+​	
 # 镜像
 ## 私有镜像库
 创建一个secret作为拉取镜像的凭证
@@ -137,3 +137,20 @@ spec:
 ```
 
 ## pod  preset
+
+
+## Controllers
+* ReplicaSet 
+* ReplicationController
+* Deployments
+* StatefulSets
+* DaemonSet
+* Garbage Collection
+* TTL Controller for Finished Resources
+* Jobs - Run to Completion
+* CronJob
+
+
+
+
+
