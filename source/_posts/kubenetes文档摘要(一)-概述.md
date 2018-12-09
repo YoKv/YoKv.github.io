@@ -112,5 +112,12 @@ kubectl get <kind>/<name> -o yaml --export > <kind>_<name>.yaml
 
 
 
+# Kubernetes API 概述
+
+```
+API服务器可以设置 -enable-swagger-ui=true 来启用API界面，使用浏览器访问 /swagger-ui
+不使用ui访问/swaggerapi
+```
+
 
 
