@@ -1,5 +1,5 @@
 ---
-title: kubenetes文档摘要（三）
+title: kubenetes文档摘要（三）--网络
 date: 2018-12-04 22:45:48
 categories: 
 - kubenetes
@@ -94,17 +94,3 @@ spec:
   - 80.11.12.10
 ```
 
-
-# Kubernetes API 概述
-```
-API服务器可以设置 -enable-swagger-ui=true 来启用API界面，使用浏览器访问 /swagger-ui
-不使用ui访问/swaggerapi
-```
-
-
-
-
-
-# Taint 和 Toleration
-
-目的：pod分配到合适的节点

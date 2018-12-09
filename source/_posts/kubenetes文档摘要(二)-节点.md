@@ -1,5 +1,5 @@
 ---
-title: kubenetes文档摘要（二）
+title: kubenetes文档摘要（二）--节点
 date: 2018-12-03 22:45:48
 categories: 
 - kubenetes
@@ -152,5 +152,7 @@ spec:
 
 
 
+# Taint 和 Toleration
 
+目的：pod分配到合适的节点
 
