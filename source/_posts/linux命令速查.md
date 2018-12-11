@@ -7,9 +7,28 @@ categories:
 
 
 
-# 查找
+# 常用命令
 
 <!--more-->
+
+```
+
+netstat -lnp|grep 22 
+
+netstat -tunlp 
+
+yum -y install ntp ntpdate
+ntpdate cn.pool.ntp.org
+ls  -laht
+
+/sbin/iptables -I INPUT -p tcp --dport 8000 -j ACCEPT
+/etc/rc.d/init.d/iptables save
+service iptables restart
+```
+
+
+
+# 查找
 
 ``` 
 find  /usr/bin -name *.zip
