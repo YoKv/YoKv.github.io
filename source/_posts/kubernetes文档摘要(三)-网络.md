@@ -1,8 +1,8 @@
 ---
-title: kubenetes文档摘要（三）--网络
+title: kubernetes文档摘要（三）--网络
 date: 2018-12-04 22:45:48
 categories: 
-- kubenetes
+- kubernetes
 ---
 
 # services

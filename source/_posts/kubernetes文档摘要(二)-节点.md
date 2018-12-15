@@ -1,8 +1,8 @@
 ---
-title: kubenetes文档摘要（二）--节点
+title: kubernetes文档摘要（二）--节点
 date: 2018-12-03 22:45:48
 categories: 
-- kubenetes
+- kubernetes
 ---
 
 # Nodes

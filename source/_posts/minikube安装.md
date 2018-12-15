@@ -2,7 +2,7 @@
 title: minikube安装
 date: 2018-11-28 21:45:48
 categories: 
-- kubenetes
+- kubernetes
 ---
 
 # minikube 介绍

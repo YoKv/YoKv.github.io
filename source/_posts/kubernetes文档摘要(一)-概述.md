@@ -1,8 +1,8 @@
 ---
-title: kubenetes文档摘要（一）--概述
+title: kubernetes文档摘要（一）--概述
 date: 2018-11-30 22:45:48
 categories: 
-- kubenetes
+- kubernetes
 ---
 
 # 官网文档主页

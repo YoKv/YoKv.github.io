@@ -2,7 +2,7 @@
 title: kubeadm安装
 date: 2018-11-28 22:45:48
 categories: 
-- kubenetes
+- kubernetes
 ---
 
 # 环境

@@ -2,7 +2,7 @@
 title: openvpn使用
 date: 2018-11-28 20:45:48
 categories: 
-- kubenetes
+- kubernetes
 ---
 
 # 安装
