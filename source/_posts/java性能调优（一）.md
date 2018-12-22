@@ -46,13 +46,13 @@ categories:
 
 ### 代理模式几种实现
 
-**接口**
+#### 接口
 ```
 public interface Foo {
     String bar();
 }
 ```
-**慢实现**
+#### 慢实现
 ```
 public class FooImpl implements Foo {
     @Override
@@ -62,16 +62,17 @@ public class FooImpl implements Foo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("bar");
         return "bar";
     }
 }
 
 ```
 
-**常规代理**
+#### 常规代理
 ```
 public class FooProxy implements Foo {
-    private FooImpl foo;
+    private Foo foo;
 
     @Override
     public String bar() {
@@ -82,11 +83,116 @@ public class FooProxy implements Foo {
     }
 }
 ```
+#### 动态代理
+#####  jdk的动态代理
 
-**动态代理**
-jdk的动态代理
+```
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
-TODO
+public class FooJDKProxy implements InvocationHandler {
+    private Foo foo;
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if (null == foo) {
+            foo = new FooImpl();
+        }
+        return foo.bar();
+    }
+}
+```
+
+
+
+#####  Cglib代理
+
+```
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+public class FooCglibProxy implements MethodInterceptor {
+    private Foo foo;
+
+    @Override
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        if (null == foo) {
+            foo = new FooImpl();
+        }
+        return foo.bar();
+    }
+}
+
+
+```
+
+#####  javassist代理
+
+```
+import javassist.util.proxy.MethodHandler;
+
+import java.lang.reflect.Method;
+
+public class FooJavassistProxy implements MethodHandler {
+    private Foo foo;
+    @Override
+    public Object invoke(Object o, Method method, Method method1, Object[] objects) throws Throwable {
+        if (null == foo) {
+            foo = new FooImpl();
+        }
+        return foo.bar();
+    }
+}
+
+```
+
+
+#####  使用代理
+
+```
+
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+import org.springframework.cglib.proxy.Enhancer;
+
+import java.lang.reflect.Proxy;
+
+public class Main {
+    public static void main(String[] args) {
+        //普通
+        Foo foo1 = new FooImpl();
+        foo1.bar();
+        //普通代理
+        Foo foo2 = new FooProxy();
+        foo2.bar();
+        //JDK动态代理
+        Foo foo3 = (Foo) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(), new Class[]{Foo.class}, new FooJDKProxy());
+        foo3.bar();
+        //Cglib动态代理
+        Enhancer enhancer = new Enhancer();
+        enhancer.setCallback(new FooCglibProxy());
+        enhancer.setInterfaces(new Class[]{Foo.class});
+        Foo foo4 = (Foo) enhancer.create();
+        foo4.bar();
+        //javassist动态代理
+        ProxyFactory proxyFactory = new ProxyFactory();
+        proxyFactory.setInterfaces(new Class[]{Foo.class});
+        Class clazz = proxyFactory.createClass();
+        try {
+            Foo foo5 = (Foo) clazz.newInstance();
+            ((ProxyObject) foo5).setHandler(new FooJavassistProxy());
+            foo5.bar();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+```
+
 
 
 几种代理比较
