@@ -56,8 +56,19 @@ ThreadLocal 对外的方法：
 
 可以看到核心是对`ThreadLocalMap`操作
 
+那`ThreadLocalMap`又是什么能，jdk对`ThreadLocalMap`解释：
+	> ThreadLocalMap is a customized hash map suitable only for
+     maintaining thread local values. No operations are exported
+     outside of the ThreadLocal class. The class is package private to
+     allow declaration of fields in class Thread.  To help deal with
+     very large and long-lived usages, the hash table entries use
+     WeakReferences for keys. However, since reference queues are not
+     used, stale entries are guaranteed to be removed only when
+     the table starts running out of space.
+源码中的注释说明这个类是一个专为线程变量定制的`hash map`，并且使用弱引用一定程度上避免内存泄漏
 
-Thread类中保存了两个ThreadLocalMap
+### 为什么能线程隔离
+Thread类中有两个ThreadLocalMap变量
 ```
     /* ThreadLocal values pertaining to this thread. This map is maintained
      * by the ThreadLocal class. */
@@ -70,18 +81,6 @@ Thread类中保存了两个ThreadLocalMap
     ThreadLocal.ThreadLocalMap inheritableThreadLocals = null;
 ```
 
-jdk对ThreadLocalMap解释
-	>ThreadLocalMap is a customized hash map suitable only for
-     maintaining thread local values. No operations are exported
-     outside of the ThreadLocal class. The class is package private to
-     allow declaration of fields in class Thread.  To help deal with
-     very large and long-lived usages, the hash table entries use
-     WeakReferences for keys. However, since reference queues are not
-     used, stale entries are guaranteed to be removed only when
-     the table starts running out of space.
-源码中的注释说明这个类是一个专为线程变量定制的`hash map`，并且使用弱引用避免内存泄漏
-
-### 为什么能线程隔离
 存储的变量`ThreadLocalMap`是`Thread`的变量，每个线程对象都单独持有`ThreadLocalMap`，保证了线程隔离，而ThreadLocal类将自身作为key到`ThreadLocalMap`取线程变量。
 
 ## 拓展类
