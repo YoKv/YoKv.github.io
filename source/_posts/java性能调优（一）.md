@@ -200,4 +200,104 @@ public class Main {
 存在多个系统对象时，只需共享一个对象，不必重复创建对象。
 
 ## 装饰者模式
+jdk中inputStream和outputStream，嵌套创建对象以实现动态添加功能
+
+## 观察者模式
+
+### jdk8实现
+```
+import java.util.Observable;
+import java.util.Random;
+
+public class Publish extends Observable {
+
+  public int createNum() {
+    int result = new Random().nextInt();
+
+    setChanged();
+    notifyObservers(result);
+    return result;
+  }
+}
+```
+
+```
+import java.util.Observable;
+import java.util.Observer;
+
+public class Subscribe implements Observer {
+  public Subscribe(Observable observable) {
+    observable.addObserver(this);
+  }
+
+  public void update(Observable o, Object arg) {
+    System.out.println("get event");
+  }
+}
+
+
+```
+
+```
+    Publish publish = new Publish();
+    Subscribe subscribe = new Subscribe(publish);
+    publish.createNum();
+```
+
+
+### jdk9+实现
+
+Observer，Observable从JDK9开始已经是Deprecated状态，在Observable的注释中说明的原因：
+```
+ * @deprecated
+ * This class and the {@link Observer} interface have been deprecated.
+ * The event model supported by {@code Observer} and {@code Observable}
+ * is quite limited, the order of notifications delivered by
+ * {@code Observable} is unspecified, and state changes are not in
+ * one-for-one correspondence with notifications.
+ * For a richer event model, consider using the
+ * {@link java.beans} package.  For reliable and ordered
+ * messaging among threads, consider using one of the concurrent data
+ * structures in the {@link java.util.concurrent} package.
+ * For reactive streams style programming, see the
+ * {@link java.util.concurrent.Flow} API.
+```
+
+**todo**
+
+
+
+
+
+
+
+
+
+## value object模式
+利用可串行化的对象封装对象的部分属性（DTO）
+
+## 业务代理模式
+将一个业务动作封装成一个方法一次调用，减少远程调用
+
+# 常用优化组件和方法
+## 缓冲(Buffered)
+协调上层组件和下层组件的性能差
+jdk中BufferedWriter和BufferedOutputstream就是利用缓冲区
+更常见的，例如日志收集时使用kafka缓冲。
+
+## 缓存
+
+## 对象池化
+常见的线程池和数据库连接池
+
+## 并行代替串行
+有效利用多核CPU
+
+## 负载均衡
+横向拓展（scaleable）
+
+## 时间换空间
+
+## 空间换时间
+
 
