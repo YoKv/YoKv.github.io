@@ -1,6 +1,13 @@
+---
+title: web安全
+date: 2019-07-28 19:39:15
+categories:
+- 项目实践
+---
+
 # xss攻击
 
-
+<!--more-->
 
 跨站脚本攻击（Cross-Site Scripting, XSS），可以将代码注入到用户浏览的网页上，这种代码包括 HTML 和 JavaScript。
 
