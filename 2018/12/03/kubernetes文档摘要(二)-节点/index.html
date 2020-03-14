@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java, Web, Math, Data" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Nodes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes文档摘要（二）--节点">
+<meta property="og:url" content="http://blog/aiyo.space/2018/12/03/kubernetes文档摘要(二)-节点/index.html">
+<meta property="og:site_name" content="技术杂记">
+<meta property="og:description" content="Nodes">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-14T08:23:33.915Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes文档摘要（二）--节点">
+<meta name="twitter:description" content="Nodes">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog/aiyo.space/2018/12/03/kubernetes文档摘要(二)-节点/"/>
+
+
+
+
+
+  <title>Kubernetes文档摘要（二）--节点 | 技术杂记</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术杂记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://blog/aiyo.space/2018/12/03/kubernetes文档摘要(二)-节点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YoKv">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术杂记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Kubernetes文档摘要（二）--节点</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-03T14:45:48+00:00">
+                2018-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Nodes"><a href="#Nodes" class="headerlink" title="Nodes"></a>Nodes</h1><a id="more"></a>
+<p>Node Status:</p>
+<ul>
+<li>Addresses</li>
+<li>Condition</li>
+<li>Capacity</li>
+<li>Info</li>
+</ul>
+<h2 id="Addresses"><a href="#Addresses" class="headerlink" title="Addresses"></a>Addresses</h2><ul>
+<li>HostName</li>
+<li>ExternalIP</li>
+<li>InternalIP</li>
+</ul>
+<h2 id="Condition"><a href="#Condition" class="headerlink" title="Condition"></a>Condition</h2><p><code>ready</code>的节点的状态：</p>
+<ul>
+<li>OutOfDisk</li>
+<li>Ready</li>
+<li>MemoryPressure</li>
+<li>PIDPressure</li>
+<li>DiskPressure</li>
+<li>NetworkUnavailable</li>
+</ul>
+<h2 id="Capacity"><a href="#Capacity" class="headerlink" title="Capacity"></a>Capacity</h2><p>资源的描述</p>
+<h2 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h2><p>节点描述，内核、版本信息、操作系统等。</p>
+<h1 id="Master-Node"><a href="#Master-Node" class="headerlink" title="Master Node"></a>Master Node</h1><p>管理权限的节点，主要通过apiserver获取其他节点信息：<br>​    &gt; 通过kubelet获取节点的pods和pods状态，提供kubelet的端口转发功能。<br>​    &gt; nodes, pods, and services通过http连接<br>​    </p>
+<h1 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h1><h2 id="私有镜像库"><a href="#私有镜像库" class="headerlink" title="私有镜像库"></a>私有镜像库</h2><p>创建一个secret作为拉取镜像的凭证<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1</div><div class="line">kind: Pod</div><div class="line">metadata:</div><div class="line">  name: foo</div><div class="line">  namespace: awesomeapps</div><div class="line">spec:</div><div class="line">  containers:</div><div class="line">    - name: foo</div><div class="line">      image: janedoe/awesomeapp:v1</div><div class="line">  imagePullSecrets:</div><div class="line">    - name: myregistrykey</div></pre></td></tr></table></figure></p>
+<p>或者，在一台主机登录私有镜像库，将凭证<code>$HOME/.docker/config.json</code>复制到所有节点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker login [server]</div><div class="line">nodes=$(kubectl get nodes -o jsonpath=&apos;&#123;range .items[*].status.addresses[?(@.type==&quot;ExternalIP&quot;)]&#125;&#123;.address&#125; &#123;end&#125;&apos;)</div><div class="line">for n in $nodes; do scp ~/.docker/config.json root@$n:/var/lib/kubelet/config.json; done</div></pre></td></tr></table></figure>
+<h1 id="容器生命周期hook"><a href="#容器生命周期hook" class="headerlink" title="容器生命周期hook"></a>容器生命周期hook</h1><ul>
+<li>PostStart</li>
+<li>PreStop</li>
+</ul>
+<h1 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h1><p>pod可以运行一个或多个容器，docker容器的网络模式是<code>None</code>，容器间可以使用<code>localhost</code>直接访问，磁盘也共同使用。</p>
+<h2 id="pod的控制"><a href="#pod的控制" class="headerlink" title="pod的控制"></a>pod的控制</h2><ul>
+<li>Deployment</li>
+<li>StatefulSet</li>
+<li>DaemonSet</li>
+</ul>
+<h2 id="pod-状态"><a href="#pod-状态" class="headerlink" title="pod 状态"></a>pod 状态</h2><ul>
+<li>Pending</li>
+<li>Running</li>
+<li>Succeeded</li>
+<li>Failed</li>
+<li>Unknown</li>
+</ul>
+<h2 id="pod-探针（probes）"><a href="#pod-探针（probes）" class="headerlink" title="pod 探针（probes）"></a>pod 探针（probes）</h2><p>方式：</p>
+<ul>
+<li>ExecAction</li>
+<li>TCPSocketAction</li>
+<li>HTTPGetAction</li>
+</ul>
+<p>类型：</p>
+<ul>
+<li>livenessProbe（是否存活）</li>
+<li>readinessProbe（是否暴露到svc）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">livenessProbe:</div><div class="line">  httpGet:</div><div class="line">    scheme: HTTPS</div><div class="line">    path: /</div><div class="line">    port: 8443</div><div class="line">  initialDelaySeconds: 30</div><div class="line">  timeoutSeconds: 30</div></pre></td></tr></table></figure>
+<h2 id="pod-生命周期"><a href="#pod-生命周期" class="headerlink" title="pod 生命周期"></a>pod 生命周期</h2><p>首先创建一个<code>pause</code>容器，分配IP。<br>启动其他定义的容器<br>如果有probes，根据probe获取容器状态。</p>
+<p>删除pod：会有一个默认30s的缓冲期，让pod自行shotdown,程序正常退出，超出时间，则强制删除（kill），也可以直接强制删除。如果<code>preStop</code>的hook没有结束，延长2s。</p>
+<h2 id="initContainers"><a href="#initContainers" class="headerlink" title="initContainers"></a>initContainers</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1</div><div class="line">kind: Pod</div><div class="line">metadata:</div><div class="line">  name: myapp-pod</div><div class="line">  labels:</div><div class="line">    app: myapp</div><div class="line">spec:</div><div class="line">  containers:</div><div class="line">  - name: myapp-container</div><div class="line">    image: busybox</div><div class="line">    command: [&apos;sh&apos;, &apos;-c&apos;, &apos;echo The app is running! &amp;&amp; sleep 3600&apos;]</div><div class="line">  initContainers:</div><div class="line">  - name: init-myservice</div><div class="line">    image: busybox</div><div class="line">    command: [&apos;sh&apos;, &apos;-c&apos;, &apos;until nslookup myservice; do echo waiting for myservice; sleep 2; done;&apos;]</div><div class="line">  - name: init-mydb</div><div class="line">    image: busybox</div><div class="line">    command: [&apos;sh&apos;, &apos;-c&apos;, &apos;until nslookup mydb; do echo waiting for mydb; sleep 2; done;&apos;]</div></pre></td></tr></table></figure>
+<h2 id="pod-preset"><a href="#pod-preset" class="headerlink" title="pod  preset"></a>pod  preset</h2><h2 id="Controllers"><a href="#Controllers" class="headerlink" title="Controllers"></a>Controllers</h2><ul>
+<li>ReplicaSet </li>
+<li>ReplicationController</li>
+<li>Deployments</li>
+<li>StatefulSets</li>
+<li>DaemonSet</li>
+<li>Garbage Collection</li>
+<li>TTL Controller for Finished Resources</li>
+<li>Jobs - Run to Completion</li>
+<li>CronJob</li>
+</ul>
+<h1 id="Taint-和-Toleration"><a href="#Taint-和-Toleration" class="headerlink" title="Taint 和 Toleration"></a>Taint 和 Toleration</h1><p>目的：pod分配到合适的节点</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="YoKv Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/30/kubernetes文档摘要(一)-概述/" rel="next" title="Kubernetes文档摘要（一）--概述">
+                <i class="fa fa-chevron-left"></i> Kubernetes文档摘要（一）--概述
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/04/kubernetes文档摘要(三)-网络/" rel="prev" title="Kubernetes文档摘要（三）--网络">
+                Kubernetes文档摘要（三）--网络 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTY2MS82MjI5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg"
+               alt="YoKv" />
+          <p class="site-author-name" itemprop="name">YoKv</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/YoKv" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://coding.net/u/YoKv" target="_blank" title="coding">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  coding
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nodes"><span class="nav-number">1.</span> <span class="nav-text">Nodes</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Addresses"><span class="nav-number">1.1.</span> <span class="nav-text">Addresses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Condition"><span class="nav-number">1.2.</span> <span class="nav-text">Condition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Capacity"><span class="nav-number">1.3.</span> <span class="nav-text">Capacity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Info"><span class="nav-number">1.4.</span> <span class="nav-text">Info</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Master-Node"><span class="nav-number">2.</span> <span class="nav-text">Master Node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#镜像"><span class="nav-number">3.</span> <span class="nav-text">镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#私有镜像库"><span class="nav-number">3.1.</span> <span class="nav-text">私有镜像库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#容器生命周期hook"><span class="nav-number">4.</span> <span class="nav-text">容器生命周期hook</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pod"><span class="nav-number">5.</span> <span class="nav-text">Pod</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pod的控制"><span class="nav-number">5.1.</span> <span class="nav-text">pod的控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pod-状态"><span class="nav-number">5.2.</span> <span class="nav-text">pod 状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pod-探针（probes）"><span class="nav-number">5.3.</span> <span class="nav-text">pod 探针（probes）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pod-生命周期"><span class="nav-number">5.4.</span> <span class="nav-text">pod 生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#initContainers"><span class="nav-number">5.5.</span> <span class="nav-text">initContainers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pod-preset"><span class="nav-number">5.6.</span> <span class="nav-text">pod  preset</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Controllers"><span class="nav-number">5.7.</span> <span class="nav-text">Controllers</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Taint-和-Toleration"><span class="nav-number">6.</span> <span class="nav-text">Taint 和 Toleration</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YoKv</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java, Web, Math, Data" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Core功能Vert.x Core 提供了下列功能:  编写 TCP 客户端和服务端 编写支持 WebSocket 的 HTTP 客户端和服务端 事件总线 共享数据 —— 本地的Map和分布式集群Map 周期性、延迟性动作 部署和撤销 Verticle 实例 数据报套接字 DNS客户端 文件系统访问 高可用性 集群">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vert.x Core">
+<meta property="og:url" content="http://blog/aiyo.space/2018/01/09/vert.x Core/index.html">
+<meta property="og:site_name" content="技术杂记">
+<meta property="og:description" content="Core功能Vert.x Core 提供了下列功能:  编写 TCP 客户端和服务端 编写支持 WebSocket 的 HTTP 客户端和服务端 事件总线 共享数据 —— 本地的Map和分布式集群Map 周期性、延迟性动作 部署和撤销 Verticle 实例 数据报套接字 DNS客户端 文件系统访问 高可用性 集群">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-14T08:23:33.915Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vert.x Core">
+<meta name="twitter:description" content="Core功能Vert.x Core 提供了下列功能:  编写 TCP 客户端和服务端 编写支持 WebSocket 的 HTTP 客户端和服务端 事件总线 共享数据 —— 本地的Map和分布式集群Map 周期性、延迟性动作 部署和撤销 Verticle 实例 数据报套接字 DNS客户端 文件系统访问 高可用性 集群">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog/aiyo.space/2018/01/09/vert.x Core/"/>
+
+
+
+
+
+  <title>vert.x Core | 技术杂记</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术杂记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://blog/aiyo.space/2018/01/09/vert.x Core/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YoKv">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术杂记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">vert.x Core</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-09T09:30:27+00:00">
+                2018-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java框架/" itemprop="url" rel="index">
+                    <span itemprop="name">Java框架</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Core功能"><a href="#Core功能" class="headerlink" title="Core功能"></a>Core功能</h2><p>Vert.x Core 提供了下列功能:</p>
+<ul>
+<li>编写 TCP 客户端和服务端</li>
+<li>编写支持 WebSocket 的 HTTP 客户端和服务端</li>
+<li>事件总线</li>
+<li>共享数据 —— 本地的Map和分布式集群Map</li>
+<li>周期性、延迟性动作</li>
+<li>部署和撤销 Verticle 实例</li>
+<li>数据报套接字</li>
+<li>DNS客户端</li>
+<li>文件系统访问</li>
+<li>高可用性</li>
+<li>集群</li>
+</ul>
+<a id="more"></a>
+<h2 id="Vert-x-对象"><a href="#Vert-x-对象" class="headerlink" title="Vert.x 对象"></a>Vert.x 对象</h2><p>Vert.x Core中的功能相当底层.<br> Vert.x对象是Vert.x 的控制中心，是做几乎一切事情的基础，包括创建客户端和服务器、获取事件总线的引用、设置定时器等等。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Vertx vertx = Vertx.vertx();</div></pre></td></tr></table></figure></p>
+<p>Vert.x对象可以在创建 Vertx 对象时指定配置项，也可以创建集群模式的 Vert.x 对象：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 注意要添加对应的集群管理器依赖，详情见集群管理器章节</span></div><div class="line">VertxOptions options = <span class="keyword">new</span> VertxOptions();</div><div class="line">Vertx.clusteredVertx(options, res -&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</div><div class="line">    Vertx vertx = res.result(); <span class="comment">// 获取到了集群模式下的 Vertx 对象</span></div><div class="line">    <span class="comment">// 做一些其他的事情</span></div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// 获取失败，可能是集群管理器出现了问题</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h2 id="重要注意点"><a href="#重要注意点" class="headerlink" title="重要注意点"></a>重要注意点</h2><ul>
+<li>流式（Fluent）的API是贯穿 Vert.x API 中的一个通用模式</li>
+<li>Vert.x 的 API 大部分都是事件驱动的</li>
+<li>黄金法则：不要阻塞Event Loop</li>
+</ul>
+<h3 id="事件驱动"><a href="#事件驱动" class="headerlink" title="事件驱动"></a>事件驱动</h3><p>在多数情况下，Vert.x使用被称为 Event Loop 的线程来调用处理器。</p>
+<h4 id="Reactor-模式"><a href="#Reactor-模式" class="headerlink" title="Reactor 模式"></a>Reactor 模式</h4><p>在一个标准的反应器实现中，有 一个独立的 Event Loop 会循环执行，处理所有到达的事件并传递给处理器处理,Node.js 实现了这种模式</p>
+<h4 id="Multi-Reactor-模式"><a href="#Multi-Reactor-模式" class="headerlink" title="Multi-Reactor 模式"></a>Multi-Reactor 模式</h4><p>Vert.x的工作方式有所不同。每个 Vertx 实例维护的是 多个Event Loop 线程。默认情况下，会根据机器上可用的核数量来设置 Event Loop 的数量，可自行设置。这意味着 Vertx 进程能够在服务器上扩展</p>
+<h3 id="运行阻塞式代码"><a href="#运行阻塞式代码" class="headerlink" title="运行阻塞式代码"></a>运行阻塞式代码</h3><p>可以通过调用 executeBlocking 方法来指定阻塞式代码的执行以及阻塞式代码执行后处理结果的异步回调。默认的阻塞式代码会在 Vert.x 的 Worker Pool 中执行，通过 setWorkerPoolSize 配置。</p>
+<h3 id="异步协调"><a href="#异步协调" class="headerlink" title="异步协调"></a>异步协调</h3><p>Vert.x 中的 Future 可以用来协调多个异步操作的结果。它支持并发组合（并行执行多个异步调用）和顺序组合（依次执行异步调用）。</p>
+<h4 id="并发合并"><a href="#并发合并" class="headerlink" title="并发合并"></a>并发合并</h4><ul>
+<li><p>CompositeFuture.all</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Future&lt;HttpServer&gt; httpServerFuture = Future.future();</div><div class="line">httpServer.listen(httpServerFuture.completer());</div><div class="line"></div><div class="line">Future&lt;NetServer&gt; netServerFuture = Future.future();</div><div class="line">netServer.listen(netServerFuture.completer());</div><div class="line"></div><div class="line">CompositeFuture.all(httpServerFuture, netServerFuture).setHandler(ar -&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (ar.succeeded()) &#123;</div><div class="line">    <span class="comment">// 所有服务器启动完成</span></div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// 有一个服务器启动失败</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>CompositeFuture.any</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CompositeFuture.any(future1, future2).setHandler(ar -&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (ar.succeeded()) &#123;</div><div class="line">    <span class="comment">// 至少一个成功</span></div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// 所有的都失败</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>CompositeFuture.join<br>  join 方法的合并会等待所有的 Future 完成，无论成败。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CompositeFuture.join(future1, future2, future3).setHandler(ar -&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (ar.succeeded()) &#123;</div><div class="line">    <span class="comment">// 所有都成功</span></div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// 至少一个失败</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>compose<br>  顺序合并</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">FileSystem fs = vertx.fileSystem();</div><div class="line">Future&lt;Void&gt; startFuture = Future.future();</div><div class="line"></div><div class="line">Future&lt;Void&gt; fut1 = Future.future();</div><div class="line">fs.createFile(<span class="string">"/foo"</span>, fut1.completer());</div><div class="line"></div><div class="line">fut1.compose(v -&gt; &#123;</div><div class="line">  <span class="comment">// fut1中文件创建完成后执行</span></div><div class="line">  Future&lt;Void&gt; fut2 = Future.future();</div><div class="line">  fs.writeFile(<span class="string">"/foo"</span>, Buffer.buffer(), fut2.completer());</div><div class="line">  <span class="keyword">return</span> fut2;</div><div class="line">&#125;).compose(v -&gt; &#123;</div><div class="line">  <span class="comment">// fut2文件写入完成后执行</span></div><div class="line">  fs.move(<span class="string">"/foo"</span>, <span class="string">"/bar"</span>, startFuture.completer());</div><div class="line">&#125;,</div><div class="line">  <span class="comment">// 如果任何一步失败，将startFuture标记成failed</span></div><div class="line">  startFuture);</div></pre></td></tr></table></figure>
+<p>  三个操作被串起来了：</p>
+<ol>
+<li>一个文件被创建（fut1）</li>
+<li>一些东西被写入到文件（fut2）</li>
+<li>文件被移走（startFuture）</li>
+</ol>
+</li>
+</ul>
+<h2 id="Verticle"><a href="#Verticle" class="headerlink" title="Verticle"></a>Verticle</h2><h3 id="Verticle介绍"><a href="#Verticle介绍" class="headerlink" title="Verticle介绍"></a>Verticle介绍</h3><p>Verticle 是由 Vert.x 部署和运行的代码块。默认情况一个 Vert.x 实例维护了N（默认情况下N = CPU核数 x 2）个 Event Loop 线程。Verticle 实例可使用任意 Vert.x 支持的编程语言编写，而且一个简单的应用程序也可以包含多种语言编写的 Verticle。<br>一个应用程序通常是由在同一个 Vert.x 实例中同时运行的许多 Verticle 实例组合而成。不同的 Verticle 实例通过向<strong> Event Bus </strong>上发送消息来相互通信。</p>
+<h3 id="编写-Verticle"><a href="#编写-Verticle" class="headerlink" title="编写 Verticle"></a>编写 Verticle</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyVerticle</span> <span class="keyword">extends</span> <span class="title">AbstractVerticle</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="comment">// Called when verticle is deployed</span></div><div class="line">  <span class="comment">// Verticle部署时调用</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// Optional - called when verticle is undeployed</span></div><div class="line">  <span class="comment">// 可选 - Verticle撤销时调用</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Verticle-种类"><a href="#Verticle-种类" class="headerlink" title="Verticle 种类"></a>Verticle 种类</h3><ul>
+<li>Stardand Verticle：这是最常用的一类 Verticle —— 它们永远运行在 Event Loop 线程上。</li>
+<li>Worker Verticle：这类 Verticle 会运行在 Worker Pool 中的线程上。一个实例绝对不会被多个线程同时执行。</li>
+<li>Multi-Threaded Worker Verticle：这类 Verticle 也会运行在 Worker Pool 中的线程上。一个实例可以由多个线程同时执行（因此需要开发者自己确保线程安全）。</li>
+</ul>
+<h3 id="Context-对象"><a href="#Context-对象" class="headerlink" title="Context 对象"></a>Context 对象</h3><p>当 Vert.x 传递一个事件给处理器或者调用 Verticle 的 start 或 stop 方法时，它会关联一个 Context 对象来执行。通常来说这个 Context 会是一个 Event Loop Context，它绑定到了一个特定的 Event Loop 线程上。所以在该 Context 上执行的操作总是在同一个 Event Loop 线程中。对于运行内联的阻塞代码的 Worker Verticle 来说，会关联一个 Worker Context，并且所有的操作运都会运行在 Worker 线程池的线程上。</p>
+<h2 id="Event-Bus"><a href="#Event-Bus" class="headerlink" title="Event Bus"></a>Event Bus</h2><p>Event Bus 是 Vert.x 的神经系统。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><h4 id="寻址"><a href="#寻址" class="headerlink" title="寻址"></a>寻址</h4><p>消息会被 Event Bus 发送到一个 地址(address)。</p>
+<h4 id="处理器"><a href="#处理器" class="headerlink" title="处理器"></a>处理器</h4><p>消息在处理器（Handler）中被接收。您可以在某个地址上注册一个处理器来接收消息。</p>
+<h3 id="发布-订阅消息"><a href="#发布-订阅消息" class="headerlink" title="发布/订阅消息"></a>发布/订阅消息</h3><p>Event Bus支持 发布消息 功能。<br>消息将被发布到一个地址中，发布意味着会将信息传递给 所有 注册在该地址上的处理器。这和 发布/订阅模式 很类似。</p>
+<h3 id="点对点模式-请求-响应模式"><a href="#点对点模式-请求-响应模式" class="headerlink" title="点对点模式/请求-响应模式"></a>点对点模式/请求-响应模式</h3><p>Event Bus也支持 点对点消息模式。<br>消息将被发送到一个地址中，Vert.x将会把消息分发到某个注册在该地址上的处理器。若这个地址上有不止一个注册过的处理器，它将使用 不严格的轮询算法 选择其中一个。<br>点对点消息传递模式下，可在消息发送的时候指定一个应答处理器（可选）。<br>当接收者收到消息并且已经被处理时，它可以选择性决定回复该消息，若选择回复则绑定的应答处理器将会被调用。当发送者收到回复消息时，它也可以回复，这个过程可以不断重复。通过这种方式可以允许在两个不同的 Verticle 之间设置一个对话窗口。这种消息模式被称作 请求-响应 模式。</p>
+<h3 id="尽力传输"><a href="#尽力传输" class="headerlink" title="尽力传输"></a>尽力传输</h3><p>Vert.x会尽它最大努力去传递消息，并且不会主动丢弃消息。这种方式称为 尽力传输(Best-effort delivery)。</p>
+<h3 id="消息类型"><a href="#消息类型" class="headerlink" title="消息类型"></a>消息类型</h3><p>Vert.x 默认允许任何基本/简单类型、String 或 Buffer 作为消息发送。不过在 Vert.x 中的通常做法是使用 JSON 格式来发送消息，<br>自定义类型要配合消息编解码器使用。</p>
+<h3 id="集群模式的-Event-Bus"><a href="#集群模式的-Event-Bus" class="headerlink" title="集群模式的 Event Bus"></a>集群模式的 Event Bus</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">VertxOptions options = <span class="keyword">new</span> VertxOptions();</div><div class="line">Vertx.clusteredVertx(options, res -&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</div><div class="line">    Vertx vertx = res.result();</div><div class="line">    EventBus eventBus = vertx.eventBus();</div><div class="line">    System.out.println(<span class="string">"We now have a clustered event bus: "</span> + eventBus);</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    System.out.println(<span class="string">"Failed: "</span> + res.cause());</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="YoKv Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/25/shell笔记/" rel="next" title="Shell笔记">
+                <i class="fa fa-chevron-left"></i> Shell笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/11/性能测试理论整理/" rel="prev" title="性能测试理论整理">
+                性能测试理论整理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTY2MS82MjI5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg"
+               alt="YoKv" />
+          <p class="site-author-name" itemprop="name">YoKv</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/YoKv" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://coding.net/u/YoKv" target="_blank" title="coding">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  coding
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Core功能"><span class="nav-number">1.</span> <span class="nav-text">Core功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vert-x-对象"><span class="nav-number">2.</span> <span class="nav-text">Vert.x 对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重要注意点"><span class="nav-number">3.</span> <span class="nav-text">重要注意点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事件驱动"><span class="nav-number">3.1.</span> <span class="nav-text">事件驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reactor-模式"><span class="nav-number">3.1.1.</span> <span class="nav-text">Reactor 模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Multi-Reactor-模式"><span class="nav-number">3.1.2.</span> <span class="nav-text">Multi-Reactor 模式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行阻塞式代码"><span class="nav-number">3.2.</span> <span class="nav-text">运行阻塞式代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异步协调"><span class="nav-number">3.3.</span> <span class="nav-text">异步协调</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#并发合并"><span class="nav-number">3.3.1.</span> <span class="nav-text">并发合并</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Verticle"><span class="nav-number">4.</span> <span class="nav-text">Verticle</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Verticle介绍"><span class="nav-number">4.1.</span> <span class="nav-text">Verticle介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写-Verticle"><span class="nav-number">4.2.</span> <span class="nav-text">编写 Verticle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Verticle-种类"><span class="nav-number">4.3.</span> <span class="nav-text">Verticle 种类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Context-对象"><span class="nav-number">4.4.</span> <span class="nav-text">Context 对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Event-Bus"><span class="nav-number">5.</span> <span class="nav-text">Event Bus</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">5.1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#寻址"><span class="nav-number">5.1.1.</span> <span class="nav-text">寻址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理器"><span class="nav-number">5.1.2.</span> <span class="nav-text">处理器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布-订阅消息"><span class="nav-number">5.2.</span> <span class="nav-text">发布/订阅消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#点对点模式-请求-响应模式"><span class="nav-number">5.3.</span> <span class="nav-text">点对点模式/请求-响应模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尽力传输"><span class="nav-number">5.4.</span> <span class="nav-text">尽力传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息类型"><span class="nav-number">5.5.</span> <span class="nav-text">消息类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群模式的-Event-Bus"><span class="nav-number">5.6.</span> <span class="nav-text">集群模式的 Event Bus</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YoKv</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java, Web, Math, Data" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="JDBC, Hibernate，Mybatis比较">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mybatis概况">
+<meta property="og:url" content="http://blog/aiyo.space/2018/01/30/mybatis概况/index.html">
+<meta property="og:site_name" content="技术杂记">
+<meta property="og:description" content="JDBC, Hibernate，Mybatis比较">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-14T08:23:33.915Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mybatis概况">
+<meta name="twitter:description" content="JDBC, Hibernate，Mybatis比较">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog/aiyo.space/2018/01/30/mybatis概况/"/>
+
+
+
+
+
+  <title>Mybatis概况 | 技术杂记</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术杂记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://blog/aiyo.space/2018/01/30/mybatis概况/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YoKv">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术杂记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Mybatis概况</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-30T09:30:27+00:00">
+                2018-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java框架/" itemprop="url" rel="index">
+                    <span itemprop="name">Java框架</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="JDBC-Hibernate，Mybatis比较"><a href="#JDBC-Hibernate，Mybatis比较" class="headerlink" title="JDBC, Hibernate，Mybatis比较"></a>JDBC, Hibernate，Mybatis比较</h2><a id="more"></a>
+<h3 id="JDBC操作数据库步骤"><a href="#JDBC操作数据库步骤" class="headerlink" title="JDBC操作数据库步骤"></a>JDBC操作数据库步骤</h3><ol>
+<li>使用JDBC编程需要连接数据库，注册驱动和数据库信息</li>
+<li>操作Connection,打开Statement对象</li>
+<li>通过Statement执行SQL,返回结果到ResultSet对象</li>
+<li>使用ResultSet读取数据，然后通过代码转换为具体的POJO对象</li>
+<li>关闭数据库相关资源</li>
+</ol>
+<h3 id="ORM模型"><a href="#ORM模型" class="headerlink" title="ORM模型"></a>ORM模型</h3><pre><code>对象关系映射(Object Relational Mapping),
+简单的说ORM框架就是数据库的表和简单Java对象的映射关系模型，
+我们通过这层映射关系就可以简单迅速地把数据库表的数据转化为POJO,
+
+ORM取代了JDBC,所有的ORM模型都是基于JDBC进行封装的，
+不同ORM模型对JDBC封装的强度是不一样的
+</code></pre><h3 id="Hibernate优势"><a href="#Hibernate优势" class="headerlink" title="Hibernate优势"></a>Hibernate优势</h3><pre><code>消除了代码的映射规则，它全部被分离到了XML或者注解里面去配置
+无需再管理数据库连接，它也可以配置在XML里面
+一个会话中，不要操作多个对象，只要操作Session对象即可
+关闭资源只需要关闭一个Session便可
+</code></pre><h3 id="Hibernate缺陷"><a href="#Hibernate缺陷" class="headerlink" title="Hibernate缺陷"></a>Hibernate缺陷</h3><pre><code>全表映射带来了不便，比如更新时需要发送所有的字段
+无法根据不同的条件组装不同的SQL
+对多表关联和复杂SQL查询支持较差，需要自己写SQL，返回后，需要自己将数据组装为POJO
+不能有效支持存储过程
+虽然有HQL，但是性能较差， 大型互联网系统往往需要优化SQL，而hibernate做不到
+</code></pre><h3 id="Mybatis优势"><a href="#Mybatis优势" class="headerlink" title="Mybatis优势"></a>Mybatis优势</h3><pre><code>为了解决Hibernate的不足，一个半自动映射的框架MyBatis应运而生
+mybatis是一个java持久层框架，它封装少、高性能·可优化、
+维护简单等优点成为了目前java移动互联网网站服务的首选持久层框架，
+它特别适合分布式和大数据网络数据库编程
+之所以称它为半自动，是因为它需要手工匹配提供POJO、SQL和映射关系，
+而全表映射的Hibernate只需要提供POJO和映射关系便可
+</code></pre><h2 id="Mybatis执行流程"><a href="#Mybatis执行流程" class="headerlink" title="Mybatis执行流程"></a>Mybatis执行流程</h2><pre><code>Mybatis是XML与POJO之间的映射关系 
+Hibernate是数据库表与POJO之间的映射关系
+
+MyBatis应用程序根据XML配置文件创建SqlSessionFactory，
+SqlSessionFactory在根据配置，配置来源于两个地方，
+一处是配置文件，一处是Java代码的注解，
+获取一个SqlSession。
+SqlSession包含了执行sql所需要的所有方法，
+可以通过SqlSession实例直接运行映射的sql语句，
+完成对数据的增删改查和事务提交等，
+用完之后关闭SqlSession。
+</code></pre><h2 id="Mybatis核心接口和类的结构"><a href="#Mybatis核心接口和类的结构" class="headerlink" title="Mybatis核心接口和类的结构"></a>Mybatis核心接口和类的结构</h2><h2 id="Mybatis核心类的生命周期"><a href="#Mybatis核心类的生命周期" class="headerlink" title="Mybatis核心类的生命周期"></a>Mybatis核心类的生命周期</h2><ul>
+<li><p>sqlSessionFactoryBuilder<br>  这个类可以被初始 、 使用和丢弃 ， 如果你已经创建好了一个 SqlSessionFactory 后就不用再保留它 。<br>  因此 ，SqlSessionFactoryBuilder 的最好作用域是方法体内，比如说定义一个方法变量。<br>  你可以重复使 用SqlSessionFactoryBuilder 生成多个SqlSessionFactory 实例 ， 但是最好不要强行保留 ，<br>  因为 XML 的解析资源要用来做其它更重要的事。</p>
+</li>
+<li><p>sqlSessionFactory<br>  一旦创建， SqlSessionFactory 就会在整个应用过程中始终存在。所以没有理由去销毁和再创建它，<br>  一个应用运行中也不建议多次创建 SqlSessionFactory 。 如果真的那样做 ， 会显得很拙劣 。<br>  因此 SqlSessionFactor y最好的作用域是 Application 。可以有多种方法实现。<br>  最简单的方法是单例模式或者是静态单例模式 。 然而这既不是广泛赞成和好用的 。<br>  反而 ， 使用 Google Guice 或 Spring 来进行依赖反射会更好 。<br>  这些框架允许你生成管理器来管理 SqlSessionFactory 的单例生命周期</p>
+</li>
+<li><p>sqlSession<br>  每个线程应该有自己的sqlSession实例。(思考为什么？)<br>  最佳范围是请求和方法范围。<br>  不能将实例的引用放到一个类的静态字段，甚至实例字段中。<br>  不能放到任何类型的管理范围中，例如httpSession中。  sqlSession需要明确关联</p>
+</li>
+</ul>
+<h2 id="Mybatis基本要素"><a href="#Mybatis基本要素" class="headerlink" title="Mybatis基本要素"></a>Mybatis基本要素</h2><p>configuration.xml 是系统的核心配置文件，包含数据源和事务管理器等设置和属性信息，<br>XML文档结构如下：</p>
+<ul>
+<li>configuration 配置 </li>
+<li>properties 可以配置在Java 属性配置文件中</li>
+<li>settings 修改 MyBatis 在运行时的行为方式</li>
+<li>typeAliases  为 Java 类型命名一个短的名字</li>
+<li>typeHandlers 类型处理器 </li>
+<li>objectFactory 对象工厂 </li>
+<li>plugins 插件 </li>
+<li>environments 环境<br>   environment 环境变量 <pre><code>1. transactionManager 事务管理器 
+2. dataSource 数据源 
+</code></pre></li>
+<li>mappers 映射器 </li>
+</ul>
+<h3 id="configuration-xml"><a href="#configuration-xml" class="headerlink" title="configuration.xml"></a>configuration.xml</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt; </div><div class="line"><span class="meta">&lt;!DOCTYPE configuration PUBLIC “-//mybatis.org//DTD Config 3.0//EN”"http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</span> </div><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </div><div class="line">    <span class="tag">&lt;<span class="name">setting</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"mapUnderscoreToCamelCase"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span>    </div><div class="line">    <span class="tag">&lt;/<span class="name">setting</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">properties</span> <span class="attr">resource</span>=<span class="string">"jdbc.properties"</span>/&gt;</span>    </div><div class="line">    <span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">typeAlias</span> <span class="attr">alias</span>=<span class="string">"User"</span> <span class="attr">type</span>=<span class="string">"xxx.mybatis.model.User"</span>/&gt;</span>  </div><div class="line">    <span class="tag">&lt;/<span class="name">typeAliases</span>&gt;</span>  </div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">"development"</span>&gt;</span> </div><div class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">"development"</span>&gt;</span> </div><div class="line">        <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">"JDBC"</span>/&gt;</span> </div><div class="line">            <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">"POOLED"</span>&gt;</span> </div><div class="line">             <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driver"</span> <span class="attr">value</span>=<span class="string">"$&#123;datasource.driverClassName&#125;"</span> /&gt;</span> </div><div class="line">             <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;datasource.url&#125;"</span> /&gt;</span></div><div class="line">             <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"$&#123;datasource.username&#125;"</span> /&gt;</span> </div><div class="line">             <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"$&#123;datasource.password&#125;"</span> /&gt;</span>            </div><div class="line">            <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span> </div><div class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span> </div><div class="line">    <span class="tag">&lt;/<span class="name">environments</span>&gt;</span> </div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">typeHandlers</span>&gt;</span>  <span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">“xxx.mybatis.typehandler”/</span>&gt;</span>  <span class="tag">&lt;/<span class="name">typeHandlers</span>&gt;</span>      </div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">mappers</span>&gt;</span> </div><div class="line">        <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">"xxx/mybatis/model/User.xml"</span>/&gt;</span> </div><div class="line">    <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="基础配置文件"><a href="#基础配置文件" class="headerlink" title="基础配置文件"></a>基础配置文件</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span>  </div><div class="line">        <span class="comment">&lt;!-- 该配置影响的所有映射器中配置的缓存的全局开关。默认值true --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"cacheEnabled"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!--延迟加载的全局开关。当开启时，所有关联对象都会延迟加载。 特定关联关系中可通过设置fetchType属性来覆盖该项的开关状态。默认值false  --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"lazyLoadingEnabled"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span>  </div><div class="line">        <span class="comment">&lt;!-- 是否允许单一语句返回多结果集（需要兼容驱动）。 默认值true --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"multipleResultSetsEnabled"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!-- 使用列标签代替列名。不同的驱动在这方面会有不同的表现， 具体可参考相关驱动文档或通过测试这两种不同的模式来观察所用驱动的结果。默认值true --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"useColumnLabel"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!-- 允许 JDBC 支持自动生成主键，需要驱动兼容。 如果设置为 true 则这个设置强制使用自动生成主键，尽管一些驱动不能兼容但仍可正常工作（比如 Derby）。 默认值false  --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"useGeneratedKeys"</span> <span class="attr">value</span>=<span class="string">"false"</span>/&gt;</span>  </div><div class="line">     <span class="comment">&lt;!--  指定 MyBatis 应如何自动映射列到字段或属性。 NONE 表示取消自动映射；PARTIAL 只会自动映射没有定义嵌套结果集映射的结果集。 FULL 会自动映射任意复杂的结果集（无论是否嵌套）。 --&gt;</span>   </div><div class="line">     <span class="comment">&lt;!-- 默认值PARTIAL --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"autoMappingBehavior"</span> <span class="attr">value</span>=<span class="string">"PARTIAL"</span>/&gt;</span> </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"autoMappingUnknownColumnBehavior"</span> <span class="attr">value</span>=<span class="string">"WARNING"</span>/&gt;</span>  </div><div class="line">     <span class="comment">&lt;!--  配置默认的执行器。SIMPLE 就是普通的执行器；REUSE 执行器会重用预处理语句（prepared statements）； BATCH 执行器将重用语句并执行批量更新。默认SIMPLE  --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"defaultExecutorType"</span> <span class="attr">value</span>=<span class="string">"SIMPLE"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!-- 设置超时时间，它决定驱动等待数据库响应的秒数。 --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"defaultStatementTimeout"</span> <span class="attr">value</span>=<span class="string">"25"</span>/&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"defaultFetchSize"</span> <span class="attr">value</span>=<span class="string">"100"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!-- 允许在嵌套语句中使用分页（RowBounds）默认值False --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"safeRowBoundsEnabled"</span> <span class="attr">value</span>=<span class="string">"false"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!-- 是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN 到经典 Java 属性名 aColumn 的类似映射。  默认false --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"mapUnderscoreToCamelCase"</span> <span class="attr">value</span>=<span class="string">"false"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!-- MyBatis 利用本地缓存机制（Local Cache）防止循环引用（circular references）和加速重复嵌套查询。  </span></div><div class="line">             默认值为 SESSION，这种情况下会缓存一个会话中执行的所有查询。  </div><div class="line">            若设置值为 STATEMENT，本地会话仅用在语句执行上，对相同 SqlSession 的不同调用将不会共享数据。  --&gt;  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"localCacheScope"</span> <span class="attr">value</span>=<span class="string">"SESSION"</span>/&gt;</span>  </div><div class="line">      <span class="comment">&lt;!-- 当没有为参数提供特定的 JDBC 类型时，为空值指定 JDBC 类型。 某些驱动需要指定列的 JDBC 类型，多数情况直接用一般类型即可，比如 NULL、VARCHAR 或 OTHER。  --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"jdbcTypeForNull"</span> <span class="attr">value</span>=<span class="string">"OTHER"</span>/&gt;</span>  </div><div class="line">    <span class="comment">&lt;!--   指定哪个对象的方法触发一次延迟加载。  --&gt;</span>  </div><div class="line">      <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"lazyLoadTriggerMethods"</span> <span class="attr">value</span>=<span class="string">"equals,clone,hashCode,toString"</span>/&gt;</span>  </div><div class="line">    <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>MyBatis 事务管理类型：</p>
+<ul>
+<li>JDBC - 这个类型直接全部使用 JDBC 的提交和回滚功能。它依靠使用连接的数据源来管理事务的作用域。</li>
+<li>MANAGED - 这个类型什么不做 ， 它从不提交 、 回滚和关闭连接 。 而是让窗口来管理事务的全部生命周期 。（比如说 Spring 或者 JAVAEE 服务器）</li>
+</ul>
+<p>数据源类型有三种： UNPOOLED ， POOLED ， JNDI 。</p>
+<ul>
+<li>UNPOOLED - 这个数据源实现只是在每次请求的时候简单的打开和关闭一个连接。虽然这有点慢，但作为一些不需要性能和立即响应的简单应用来说,不失为一种好选择 。 </li>
+<li>POOLED - 这个数据源缓存 JDBC 连接对象用于避免每次都要连接和生成连接实例而需要的验证时间 。对于并发 WEB 应用，这种方式非常流行因为它有最快的响应时间。</li>
+<li>JNDI - 这个数据源实现是为了准备和 Spring 或应用服务一起使用，可以在外部也可以在内部配置这个数据源，然后在 JNDI 上下文中引用它。</li>
+</ul>
+<h4 id="SQL映射文件"><a href="#SQL映射文件" class="headerlink" title="SQL映射文件"></a>SQL映射文件</h4><ol>
+<li><p>使用相对路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;mappers&gt; </div><div class="line">    &lt;mapper resource=&quot;org/mybatis/builder/UserMapper.xml&quot;/&gt;</div><div class="line">&lt;/mappers&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用全路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">  &lt;mappers&gt; </div><div class="line">&lt;mapper url=&quot;file:///var/sqlmaps/AuthorMapper.xml&quot;/&gt;</div><div class="line">  &lt;/mappers&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Mapper-xml配置"><a href="#Mapper-xml配置" class="headerlink" title="Mapper.xml配置"></a>Mapper.xml配置</h3><p>SQL 映射文件结构</p>
+<ul>
+<li>cache -  配置给定命名空间的缓存。 </li>
+<li>cache-ref –  从其他命名空间引用缓存配置。 </li>
+<li>resultMap  –  最复杂，也是最有力量的元素，用来描述如何从数据库结果集中来加载对象</li>
+<li>sql –  可以重用的 SQL 块，也可以被其他语句引用。  </li>
+<li>insert –  映射插入语句 (主键策略)</li>
+<li>update –  映射更新语句  </li>
+<li>delete –  映射删除语句 </li>
+<li>select –  映射查询语句</li>
+</ul>
+<h3 id="动态-SQL"><a href="#动态-SQL" class="headerlink" title="动态 SQL"></a>动态 SQL</h3><ul>
+<li>if      </li>
+<li>choose(when,otherwise) </li>
+<li>trim(where,set) </li>
+<li>forea</li>
+<li>ch</li>
+</ul>
+<h3 id="深入"><a href="#深入" class="headerlink" title="深入"></a>深入</h3><ol>
+<li>HandlerType</li>
+<li>拦截器</li>
+<li>事务</li>
+<li>插件</li>
+</ol>
+<h3 id="tips"><a href="#tips" class="headerlink" title="tips"></a>tips</h3><ul>
+<li>区分 #{} 和 ${}的不同应用场景</li>
+<li>延迟加载</li>
+<li>Spring环境中使用mybatis-spring而不直接使用mybatis原生接口</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="YoKv Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/11/性能测试理论整理/" rel="next" title="性能测试理论整理">
+                <i class="fa fa-chevron-left"></i> 性能测试理论整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/30/mybatis学习/" rel="prev" title="Mybatis学习">
+                Mybatis学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTY2MS82MjI5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg"
+               alt="YoKv" />
+          <p class="site-author-name" itemprop="name">YoKv</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/YoKv" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://coding.net/u/YoKv" target="_blank" title="coding">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  coding
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC-Hibernate，Mybatis比较"><span class="nav-number">1.</span> <span class="nav-text">JDBC, Hibernate，Mybatis比较</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JDBC操作数据库步骤"><span class="nav-number">1.1.</span> <span class="nav-text">JDBC操作数据库步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ORM模型"><span class="nav-number">1.2.</span> <span class="nav-text">ORM模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hibernate优势"><span class="nav-number">1.3.</span> <span class="nav-text">Hibernate优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hibernate缺陷"><span class="nav-number">1.4.</span> <span class="nav-text">Hibernate缺陷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mybatis优势"><span class="nav-number">1.5.</span> <span class="nav-text">Mybatis优势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis执行流程"><span class="nav-number">2.</span> <span class="nav-text">Mybatis执行流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis核心接口和类的结构"><span class="nav-number">3.</span> <span class="nav-text">Mybatis核心接口和类的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis核心类的生命周期"><span class="nav-number">4.</span> <span class="nav-text">Mybatis核心类的生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis基本要素"><span class="nav-number">5.</span> <span class="nav-text">Mybatis基本要素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configuration-xml"><span class="nav-number">5.1.</span> <span class="nav-text">configuration.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础配置文件"><span class="nav-number">5.2.</span> <span class="nav-text">基础配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事务"><span class="nav-number">5.2.1.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL映射文件"><span class="nav-number">5.2.2.</span> <span class="nav-text">SQL映射文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper-xml配置"><span class="nav-number">5.3.</span> <span class="nav-text">Mapper.xml配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态-SQL"><span class="nav-number">5.4.</span> <span class="nav-text">动态 SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#深入"><span class="nav-number">5.5.</span> <span class="nav-text">深入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tips"><span class="nav-number">5.6.</span> <span class="nav-text">tips</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YoKv</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

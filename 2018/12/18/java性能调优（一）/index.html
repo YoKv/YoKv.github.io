@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java, Web, Math, Data" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java性能调优（一）.md">
+<meta property="og:url" content="http://blog/aiyo.space/2018/12/18/java性能调优（一）/index.html">
+<meta property="og:site_name" content="技术杂记">
+<meta property="og:description" content="介绍">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-14T08:23:33.915Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java性能调优（一）.md">
+<meta name="twitter:description" content="介绍">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog/aiyo.space/2018/12/18/java性能调优（一）/"/>
+
+
+
+
+
+  <title>java性能调优（一）.md | 技术杂记</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术杂记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://blog/aiyo.space/2018/12/18/java性能调优（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YoKv">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术杂记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">java性能调优（一）.md</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-18T09:30:27+00:00">
+                2018-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">Java进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><a id="more"></a>
+<p>读书笔记<br><a href="https://baike.baidu.com/item/Java%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E2%80%94%E8%AE%A9%E4%BD%A0%E7%9A%84Java%E7%A8%8B%E5%BA%8F%E6%9B%B4%E5%BF%AB%E3%80%81%E6%9B%B4%E7%A8%B3%E5%AE%9A" target="_blank" rel="external">📕链接</a></p>
+<h2 id="性能体现方面"><a href="#性能体现方面" class="headerlink" title="性能体现方面"></a>性能体现方面</h2><ul>
+<li>执行速度</li>
+<li>内存分配</li>
+<li>启动时间</li>
+<li>负载承受能力</li>
+</ul>
+<h2 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h2><ul>
+<li>执行时间</li>
+<li>cpu时间</li>
+<li>内存分配</li>
+<li>磁盘吞吐量</li>
+<li>网络吞吐量</li>
+<li>响应时间</li>
+</ul>
+<p>系统性能优化是典型的木桶原理，先优化性能瓶颈</p>
+<h2 id="优化层次"><a href="#优化层次" class="headerlink" title="优化层次"></a>优化层次</h2><ul>
+<li>设计调优</li>
+<li>代码调优</li>
+<li>jvm调优</li>
+<li>数据库调优</li>
+<li>操作系统调优</li>
+</ul>
+<h1 id="设计优化"><a href="#设计优化" class="headerlink" title="设计优化"></a>设计优化</h1><p>善用设计模式</p>
+<h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>单例模式的对象避免了每次使用都创建对象。<br>简单的单例实现不能惰性加载，加上同步锁后又有性能损失，可以使用内部类维护单例的实例。单例并不一定总是只有一个对象，比如使用反射非法操作时，或者使用序列化和反序列化合法生成对象（可以实现深克隆）</p>
+<h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><p>系统启动时，将消耗资源多方法用代理模式分离，加快启动时间。用代理模式实现延时加载。</p>
+<h3 id="代理模式几种实现"><a href="#代理模式几种实现" class="headerlink" title="代理模式几种实现"></a>代理模式几种实现</h3><h4 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Foo &#123;</div><div class="line">    String bar();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="慢实现"><a href="#慢实现" class="headerlink" title="慢实现"></a>慢实现</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class FooImpl implements Foo &#123;</div><div class="line">    @Override</div><div class="line">    public String bar() &#123;</div><div class="line">        try &#123;</div><div class="line">            Thread.sleep(5000);</div><div class="line">        &#125; catch (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        System.out.println(&quot;bar&quot;);</div><div class="line">        return &quot;bar&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="常规代理"><a href="#常规代理" class="headerlink" title="常规代理"></a>常规代理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class FooProxy implements Foo &#123;</div><div class="line">    private Foo foo;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String bar() &#123;</div><div class="line">        if (null == foo) &#123;</div><div class="line">            foo = new FooImpl();</div><div class="line">        &#125;</div><div class="line">        return foo.bar();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h4><h5 id="jdk的动态代理"><a href="#jdk的动态代理" class="headerlink" title="jdk的动态代理"></a>jdk的动态代理</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">import java.lang.reflect.InvocationHandler;</div><div class="line">import java.lang.reflect.Method;</div><div class="line"></div><div class="line">public class FooJDKProxy implements InvocationHandler &#123;</div><div class="line">    private Foo foo;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</div><div class="line">        if (null == foo) &#123;</div><div class="line">            foo = new FooImpl();</div><div class="line">        &#125;</div><div class="line">        return foo.bar();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="Cglib代理"><a href="#Cglib代理" class="headerlink" title="Cglib代理"></a>Cglib代理</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">import org.springframework.cglib.proxy.MethodInterceptor;</div><div class="line">import org.springframework.cglib.proxy.MethodProxy;</div><div class="line"></div><div class="line">import java.lang.reflect.Method;</div><div class="line"></div><div class="line">public class FooCglibProxy implements MethodInterceptor &#123;</div><div class="line">    private Foo foo;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable &#123;</div><div class="line">        if (null == foo) &#123;</div><div class="line">            foo = new FooImpl();</div><div class="line">        &#125;</div><div class="line">        return foo.bar();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="javassist代理"><a href="#javassist代理" class="headerlink" title="javassist代理"></a>javassist代理</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">import javassist.util.proxy.MethodHandler;</div><div class="line"></div><div class="line">import java.lang.reflect.Method;</div><div class="line"></div><div class="line">public class FooJavassistProxy implements MethodHandler &#123;</div><div class="line">    private Foo foo;</div><div class="line">    @Override</div><div class="line">    public Object invoke(Object o, Method method, Method method1, Object[] objects) throws Throwable &#123;</div><div class="line">        if (null == foo) &#123;</div><div class="line">            foo = new FooImpl();</div><div class="line">        &#125;</div><div class="line">        return foo.bar();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="使用代理"><a href="#使用代理" class="headerlink" title="使用代理"></a>使用代理</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import javassist.util.proxy.ProxyFactory;</div><div class="line">import javassist.util.proxy.ProxyObject;</div><div class="line">import org.springframework.cglib.proxy.Enhancer;</div><div class="line"></div><div class="line">import java.lang.reflect.Proxy;</div><div class="line"></div><div class="line">public class Main &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        //普通</div><div class="line">        Foo foo1 = new FooImpl();</div><div class="line">        foo1.bar();</div><div class="line">        //普通代理</div><div class="line">        Foo foo2 = new FooProxy();</div><div class="line">        foo2.bar();</div><div class="line">        //JDK动态代理</div><div class="line">        Foo foo3 = (Foo) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(), new Class[]&#123;Foo.class&#125;, new FooJDKProxy());</div><div class="line">        foo3.bar();</div><div class="line">        //Cglib动态代理</div><div class="line">        Enhancer enhancer = new Enhancer();</div><div class="line">        enhancer.setCallback(new FooCglibProxy());</div><div class="line">        enhancer.setInterfaces(new Class[]&#123;Foo.class&#125;);</div><div class="line">        Foo foo4 = (Foo) enhancer.create();</div><div class="line">        foo4.bar();</div><div class="line">        //javassist动态代理</div><div class="line">        ProxyFactory proxyFactory = new ProxyFactory();</div><div class="line">        proxyFactory.setInterfaces(new Class[]&#123;Foo.class&#125;);</div><div class="line">        Class clazz = proxyFactory.createClass();</div><div class="line">        try &#123;</div><div class="line">            Foo foo5 = (Foo) clazz.newInstance();</div><div class="line">            ((ProxyObject) foo5).setHandler(new FooJavassistProxy());</div><div class="line">            foo5.bar();</div><div class="line">        &#125; catch (InstantiationException | IllegalAccessException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="几种代理比较"><a href="#几种代理比较" class="headerlink" title="几种代理比较"></a>几种代理比较</h5><p>性能上cglib和javassist都比jdk的动态代理好。JDK要求代理类和真实主题类都要实现同一个接口。</p>
+<h2 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h2><p>存在多个系统对象时，只需共享一个对象，不必重复创建对象。</p>
+<h2 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h2><p>jdk中inputStream和outputStream，嵌套创建对象以实现动态添加功能</p>
+<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><h3 id="jdk8实现"><a href="#jdk8实现" class="headerlink" title="jdk8实现"></a>jdk8实现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import java.util.Observable;</div><div class="line">import java.util.Random;</div><div class="line"></div><div class="line">public class Publish extends Observable &#123;</div><div class="line"></div><div class="line">  public int createNum() &#123;</div><div class="line">    int result = new Random().nextInt();</div><div class="line"></div><div class="line">    setChanged();</div><div class="line">    notifyObservers(result);</div><div class="line">    return result;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">import java.util.Observable;</div><div class="line">import java.util.Observer;</div><div class="line"></div><div class="line">public class Subscribe implements Observer &#123;</div><div class="line">  public Subscribe(Observable observable) &#123;</div><div class="line">    observable.addObserver(this);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  public void update(Observable o, Object arg) &#123;</div><div class="line">    System.out.println(&quot;get event&quot;);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Publish publish = new Publish();</div><div class="line">Subscribe subscribe = new Subscribe(publish);</div><div class="line">publish.createNum();</div></pre></td></tr></table></figure>
+<h3 id="jdk9-实现"><a href="#jdk9-实现" class="headerlink" title="jdk9+实现"></a>jdk9+实现</h3><p>Observer，Observable从JDK9开始已经是Deprecated状态，在Observable的注释中说明的原因：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">* @deprecated</div><div class="line">* This class and the &#123;@link Observer&#125; interface have been deprecated.</div><div class="line">* The event model supported by &#123;@code Observer&#125; and &#123;@code Observable&#125;</div><div class="line">* is quite limited, the order of notifications delivered by</div><div class="line">* &#123;@code Observable&#125; is unspecified, and state changes are not in</div><div class="line">* one-for-one correspondence with notifications.</div><div class="line">* For a richer event model, consider using the</div><div class="line">* &#123;@link java.beans&#125; package.  For reliable and ordered</div><div class="line">* messaging among threads, consider using one of the concurrent data</div><div class="line">* structures in the &#123;@link java.util.concurrent&#125; package.</div><div class="line">* For reactive streams style programming, see the</div><div class="line">* &#123;@link java.util.concurrent.Flow&#125; API.</div></pre></td></tr></table></figure></p>
+<p><strong>todo</strong></p>
+<h2 id="value-object模式"><a href="#value-object模式" class="headerlink" title="value object模式"></a>value object模式</h2><p>利用可串行化的对象封装对象的部分属性（DTO）</p>
+<h2 id="业务代理模式"><a href="#业务代理模式" class="headerlink" title="业务代理模式"></a>业务代理模式</h2><p>将一个业务动作封装成一个方法一次调用，减少远程调用</p>
+<h1 id="常用优化组件和方法"><a href="#常用优化组件和方法" class="headerlink" title="常用优化组件和方法"></a>常用优化组件和方法</h1><h2 id="缓冲-Buffered"><a href="#缓冲-Buffered" class="headerlink" title="缓冲(Buffered)"></a>缓冲(Buffered)</h2><p>协调上层组件和下层组件的性能差<br>jdk中BufferedWriter和BufferedOutputstream就是利用缓冲区<br>更常见的，例如日志收集时使用kafka缓冲。</p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><h2 id="对象池化"><a href="#对象池化" class="headerlink" title="对象池化"></a>对象池化</h2><p>常见的线程池和数据库连接池</p>
+<h2 id="并行代替串行"><a href="#并行代替串行" class="headerlink" title="并行代替串行"></a>并行代替串行</h2><p>有效利用多核CPU</p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>横向拓展（scaleable）</p>
+<h2 id="时间换空间"><a href="#时间换空间" class="headerlink" title="时间换空间"></a>时间换空间</h2><h2 id="空间换时间"><a href="#空间换时间" class="headerlink" title="空间换时间"></a>空间换时间</h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="YoKv Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/16/redis数据结构-总结/" rel="next" title="Redis数据结构-总结">
+                <i class="fa fa-chevron-left"></i> Redis数据结构-总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/19/java性能调优（二）/" rel="prev" title="java性能调优（二）.md">
+                java性能调优（二）.md <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTY2MS82MjI5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://www.fzlqqqm.com/uploads/allimg/20140917/20140917091839345.jpg"
+               alt="YoKv" />
+          <p class="site-author-name" itemprop="name">YoKv</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/YoKv" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://coding.net/u/YoKv" target="_blank" title="coding">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  coding
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能体现方面"><span class="nav-number">1.1.</span> <span class="nav-text">性能体现方面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指标"><span class="nav-number">1.2.</span> <span class="nav-text">指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化层次"><span class="nav-number">1.3.</span> <span class="nav-text">优化层次</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设计优化"><span class="nav-number">2.</span> <span class="nav-text">设计优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单例模式"><span class="nav-number">2.1.</span> <span class="nav-text">单例模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代理模式"><span class="nav-number">2.2.</span> <span class="nav-text">代理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代理模式几种实现"><span class="nav-number">2.2.1.</span> <span class="nav-text">代理模式几种实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#接口"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#慢实现"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">慢实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常规代理"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">常规代理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态代理"><span class="nav-number">2.2.1.4.</span> <span class="nav-text">动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#jdk的动态代理"><span class="nav-number">2.2.1.4.1.</span> <span class="nav-text">jdk的动态代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Cglib代理"><span class="nav-number">2.2.1.4.2.</span> <span class="nav-text">Cglib代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#javassist代理"><span class="nav-number">2.2.1.4.3.</span> <span class="nav-text">javassist代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用代理"><span class="nav-number">2.2.1.4.4.</span> <span class="nav-text">使用代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#几种代理比较"><span class="nav-number">2.2.1.4.5.</span> <span class="nav-text">几种代理比较</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#享元模式"><span class="nav-number">2.3.</span> <span class="nav-text">享元模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#装饰者模式"><span class="nav-number">2.4.</span> <span class="nav-text">装饰者模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#观察者模式"><span class="nav-number">2.5.</span> <span class="nav-text">观察者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk8实现"><span class="nav-number">2.5.1.</span> <span class="nav-text">jdk8实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk9-实现"><span class="nav-number">2.5.2.</span> <span class="nav-text">jdk9+实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#value-object模式"><span class="nav-number">2.6.</span> <span class="nav-text">value object模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#业务代理模式"><span class="nav-number">2.7.</span> <span class="nav-text">业务代理模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用优化组件和方法"><span class="nav-number">3.</span> <span class="nav-text">常用优化组件和方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓冲-Buffered"><span class="nav-number">3.1.</span> <span class="nav-text">缓冲(Buffered)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存"><span class="nav-number">3.2.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象池化"><span class="nav-number">3.3.</span> <span class="nav-text">对象池化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并行代替串行"><span class="nav-number">3.4.</span> <span class="nav-text">并行代替串行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#负载均衡"><span class="nav-number">3.5.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间换空间"><span class="nav-number">3.6.</span> <span class="nav-text">时间换空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#空间换时间"><span class="nav-number">3.7.</span> <span class="nav-text">空间换时间</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YoKv</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
