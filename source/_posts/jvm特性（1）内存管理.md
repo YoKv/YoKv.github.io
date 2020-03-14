@@ -1,5 +1,5 @@
 ---
-title: jvm特性（一）内存管理
+title: jvm特性（1）内存管理
 date: 2020-02-19 17:30:27
 categories:
 - Java进阶
